@@ -626,8 +626,16 @@ public class HeadlessGame : AbstractGame, IFikaGame, IClientHearingTable
                     continue;
                 }
 
-                player.Dispose();
-                AssetPoolObject.ReturnToPool(player.gameObject, true);
+                try
+                {
+                    player.Dispose();
+                    AssetPoolObject.ReturnToPool(player.gameObject, true);
+                }
+                catch (Exception ex)
+                {
+                    FikaHeadlessPlugin.PlayerDisposeError = true;
+                    _logger.LogError($"Stop: There was an error while disposing player: {ex}");
+                }
             }
         }
         else
